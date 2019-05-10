@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  jenkins:
+    container_name: jenkins
+    restart: always
+    build: jenkins
+    #image: jenkins/jenkins:lts
+    ports:
+    - "8103:8080"
+    volumes: 
+    - jenkins-data:/var/jenkins_home
+    - /var/run/docker.sock:/var/run/docker.sock # Use Docker from the host instead of running Docker in Docker
+
+  sonarqube:
+    container_name: sonarqube
+    restart: always
+    image: sonarqube:7.7-community
+    ports:
+    - "8104:9000"
+    volumes:
+    - sonarqube-conf:/opt/sonarqube/conf
+    - sonarqube-data:/opt/sonarqube/data
+    - sonarqube-extensions:/opt/sonarqube/extensions
+    - sonarqube-bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
+  dockerregistry:
+    container_name: dockerregistry 
+    restart: always
+    image: registry:2.5.2
+    ports:
+    - "8105:5000"
+    volumes:
+    - dockerregistry-data:/var/lib/registry
+    - dockerregistry-certs:/certs
+    - dockerregistry-auth:/auth
+
+volumes:
+  dockerregistry-data: 
+    name: dockerregistry-data
+  dockerregistry-certs:
+    name: dockerregistry-certs
+  dockerregistry-auth:
+    name: dockerregistry-auth
+  sonarqube-conf:
+    name: sonarqube-conf
+  sonarqube-data:
+    name: sonarqube-data    
+  sonarqube-extensions:
+    name: sonarqube-extensions
+  sonarqube-bundled-plugins:
+    name: sonarqube-bundled-plugins
+  jenkins-data:
+    name: jenkins-data
