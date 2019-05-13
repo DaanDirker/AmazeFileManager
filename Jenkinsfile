@@ -3,7 +3,9 @@ pipeline {
     
     stages {
         stage ("Build") {
-            sh "./gradlew assembleDebug"
+            steps {
+                sh "./gradlew assembleDebug"
+            }
         }
     }
 }
