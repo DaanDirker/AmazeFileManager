@@ -50,7 +50,7 @@ public class CreateFolderEspressoTest {
     }
 
     @Test
-    public void test() {
+    public void testCreateFolder_createFolder_folderCreatedInternalStorage() {
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
         onView(withId(R.id.menu_new_folder)).perform(click());
         onView(withId(R.id.singleedittext_input)).perform(typeText(unknownFolder));

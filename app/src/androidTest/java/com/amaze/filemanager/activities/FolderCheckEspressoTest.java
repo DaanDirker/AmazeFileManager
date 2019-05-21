@@ -19,7 +19,8 @@ import java.io.File;
 public class FolderCheckEspressoTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, false, true);
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
+            MainActivity.class, false, true);
 
     private MainActivityHelper mainActivityHelper;
     private String unknownFolder = "/ak21d19d1dsa124";
@@ -34,7 +35,8 @@ public class FolderCheckEspressoTest {
 
     @Test
     public void testFolder_folderIsNotExistent_doesNotExist() {
-        file = new File(activityRule.getActivity().getCurrentMainFragment().getCurrentPath() + unknownFolder);
+        file = new File(activityRule.getActivity().getCurrentMainFragment()
+                .getCurrentPath() + unknownFolder);
 
         int checkResult = mainActivityHelper.checkFolder(file, context);
         Assert.assertEquals(MainActivityHelper.DOESNT_EXIST, checkResult);
@@ -45,6 +47,7 @@ public class FolderCheckEspressoTest {
         file = new File(activityRule.getActivity().getCurrentMainFragment().getCurrentPath());
 
         int checkResult = mainActivityHelper.checkFolder(file, context);
-        Assert.assertEquals(MainActivityHelper.CAN_CREATE_FILES, MainActivityHelper.WRITABLE_OR_ON_SDCARD, checkResult);
+        Assert.assertEquals(MainActivityHelper.CAN_CREATE_FILES,
+                MainActivityHelper.WRITABLE_OR_ON_SDCARD, checkResult);
     }
 }
