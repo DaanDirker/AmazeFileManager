@@ -228,7 +228,7 @@ public class MainFragment extends android.support.v4.app.Fragment implements Bot
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_frag, container, false);
         setRetainInstance(true);
-        listView = rootView.findViewById(R.id.listView);
+        listView = rootView.findViewById(R.id.filesListView);
         mToolbarContainer = getMainActivity().getAppbar().getAppbarLayout();
         fastScroller = rootView.findViewById(R.id.fastscroll);
         fastScroller.setPressedHandleColor(accentColor);
