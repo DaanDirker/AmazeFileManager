@@ -22,7 +22,7 @@ public class SearchFileTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Before
-    public void beforeTesting()  {
+    public void setUp()  {
         fileOne = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile.txt");
         fileTwo = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile2.txt");
         fileThree = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile3.txt");
@@ -30,7 +30,7 @@ public class SearchFileTest {
     }
 
     @Test
-    public void testMethod() {
+    public void find_FindCreatedFile() {
         assertEquals("TestFile.txt", fileOne.getName());
         assertEquals("TestFile2.txt", fileTwo.getName());
         assertEquals("TestFile3.txt", fileThree.getName());

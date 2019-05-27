@@ -27,11 +27,11 @@ public class PermissionsTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, true);
 
     @Before
-    public void beforeTesting() {
+    public void setUp() {
         context = InstrumentationRegistry.getTargetContext(); }
 
     @Test
-    public void testPermissions() {
+    public void test_IfUserHasPermission_ToWrite() {
         assertTrue(String.valueOf(true), ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED);
     }
