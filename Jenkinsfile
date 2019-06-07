@@ -14,7 +14,13 @@ pipeline {
         stage ("Unit testing") {
             steps {
                 sh './gradlew test'
-                sh './gradlew deviceAndroidTest'
+                sh './gradlew connectedCheck'
+            }
+
+            post {
+                always {
+                    junit '*.xml'
+                }
             }
         }
         stage('Archive APK') {
