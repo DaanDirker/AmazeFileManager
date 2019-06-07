@@ -5,7 +5,7 @@ pipeline {
     }
 
     stages {
-        stage ("Compile") {
+        stage ("Build") {
             steps {
                 sh "./gradlew clean"
                 sh "./gradlew assembleDebug"
@@ -14,13 +14,11 @@ pipeline {
         stage ("Unit testing") {
             steps {
                 sh './gradlew test'
-                sh './gradlew installDebug'
-                sh './gradlew connectedAndroidTest'
+                sh './gradlew deviceAndroidTest'
             }
         }
-        stage('Build APK') {
+        stage('Archive APK') {
             steps {
-                sh './gradlew assembleDebug'
                 archiveArtifacts '**/*.apk'
             }
         }
