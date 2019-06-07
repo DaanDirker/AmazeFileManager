@@ -14,6 +14,7 @@ pipeline {
         stage ("Unit testing") {
             steps {
                 sh './gradlew test'
+                sh './gradlew installDebug'
                 sh './gradlew connectedAndroidTest'
             }
         }
