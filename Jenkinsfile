@@ -7,13 +7,14 @@ pipeline {
     stages {
         stage ("Compile") {
             steps {
-                sh "./gradlew compileDebugSources"
+                sh "./gradlew clean"
+                sh "./gradlew assembleDebug"
             }
         }
         stage ("Unit testing") {
             steps {
-                sh './gradlew testDebugUnitTest testDebugUnitTest'
-                junit '**/TEST-*.xml'
+                sh './gradlew test'
+                sh './gradlew connectedAndroidTest'
             }
         }
         stage('Build APK') {
