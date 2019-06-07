@@ -7,20 +7,16 @@ pipeline {
     stages {
         stage ("Build") {
             steps {
-                sh "./gradlew clean"
-                sh "./gradlew assembleDebug"
+                sh "./gradlew clean assemble"
+                
             }
         }
         stage ("Unit testing") {
             steps {
-                sh './gradlew test'
-                sh './gradlew connectedCheck'
-            }
-
-            post {
-                always {
-                    junit '*.xml'
+                lock('emulator') {
+                    sh './gradlew connectedCheck'
                 }
+                junit '**/test-results/**/*.xml'
             }
         }
         stage('Archive APK') {
