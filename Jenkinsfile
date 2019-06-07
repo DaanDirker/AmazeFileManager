@@ -1,12 +1,42 @@
 pipeline {
-    agent any
-    
+    agent {
+        label any
+    }
+    options {
+        skipStagesAfterUnstable()
+    }
+
     stages {
-        stage ("Build") {
+        stage ("Compile") {
             steps {
-		sh "./gradlew yes | $ANDROID_HOME/bin/sdkmanager 'platforms;android-28'"
-		sh "./gradlew yes | $ANDROID_HOME/bin/sdkmanager 'build-tools;27.0.3'"
-                sh "./gradlew assembleDebug"
+                sh "./gradlew compileDebugSources"
+            }
+        }
+        stage ("Unit testing") {
+            steps {
+                sh './gradlew testDebugUnitTest testDebugUnitTest'
+                junit '**/TEST-*.xml'
+            }
+        }
+        // stage("SonarQube analysis") {
+        //     environment {
+        //         scannerHome = tool 'SonarQubeScanner'
+        //     }
+
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             sh "${scannerHome}/bin/sonar-scanner"
+        //         }
+
+        //         timeout(time: 10, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+        stage('Build APK') {
+            steps {
+                sh './gradlew assembleDebug'
+                archiveArtifacts '**/*.apk'
             }
         }
     }
