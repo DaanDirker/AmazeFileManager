@@ -8,7 +8,6 @@ pipeline {
         stage ("Build") {
             steps {
                 sh "./gradlew clean assembleDebug"
-                
             }
         }
         stage ("Unit testing") {
