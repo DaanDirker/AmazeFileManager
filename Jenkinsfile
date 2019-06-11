@@ -13,8 +13,8 @@ pipeline {
         }
         stage ("Unit testing") {
             steps {
-                sh './gradlew connectedDebugAndroidTest'
-                junit '**/test-results/**/*.xml'
+                sh './gradlew connectedAndroidTest'
+                junit '**/TEST-*.xml'
             }
         }
         stage('Archive APK') {
