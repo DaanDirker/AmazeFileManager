@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class SearchFileTest {
 
+    //Arrange test
     private HybridFileParcelable fileOne;
     private HybridFileParcelable fileTwo;
     private HybridFileParcelable fileThree;
@@ -22,7 +23,8 @@ public class SearchFileTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Before
-    public void setUp()  {
+    public void act_Test()  {
+        //Act test
         fileOne = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile.txt");
         fileTwo = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile2.txt");
         fileThree = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile3.txt");
@@ -31,6 +33,7 @@ public class SearchFileTest {
 
     @Test
     public void find_FindCreatedFile() {
+        //Assert test
         assertEquals("TestFile.txt", fileOne.getName());
         assertEquals("TestFile2.txt", fileTwo.getName());
         assertEquals("TestFile3.txt", fileThree.getName());

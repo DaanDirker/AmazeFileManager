@@ -30,7 +30,6 @@ public class CreateFolderEspressoTest {
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, false, true);
-
     private MainActivityHelper mainActivityHelper;
     private File folder;
     private Context context;
@@ -39,6 +38,7 @@ public class CreateFolderEspressoTest {
 
     @Before
     public void setUp() {
+        //Arrange test
         context = InstrumentationRegistry.getTargetContext();
         mainActivityHelper = activityRule.getActivity().mainActivityHelper;
 
@@ -51,11 +51,13 @@ public class CreateFolderEspressoTest {
 
     @Test
     public void testCreateFolder_createFolder_folderCreatedInternalStorage() {
+        //Act test
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
         onView(withId(R.id.menu_new_folder)).perform(click());
         onView(withId(R.id.singleedittext_input)).perform(typeText(unknownFolder));
         onView(withText(R.string.create)).perform(click());
 
+        //Assert test
         assertTrue(folder.exists());
     }
 

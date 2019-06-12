@@ -16,58 +16,59 @@ public class AppThemeTest {
 
         @Test
         public void test_ifThemesAreValid() {
+            //Arrange test and Act test
             AppTheme appThemeLight = AppTheme.getTheme(AppTheme.LIGHT_INDEX);
-            assertEquals(AppTheme.LIGHT, appThemeLight);
-
-            AppTheme appThemeDark = AppTheme.getTheme(AppTheme.DARK_INDEX);
-            assertEquals(AppTheme.DARK, appThemeDark);
-
+            AppTheme appThemeDark  = AppTheme.getTheme(AppTheme.DARK_INDEX);
             AppTheme appThemeTimed = AppTheme.getTheme(AppTheme.TIME_INDEX);
-            assertEquals(AppTheme.TIMED, appThemeTimed);
-
             AppTheme appThemeBlack = AppTheme.getTheme(AppTheme.BLACK_INDEX);
+
+            //Assert test
+            assertEquals(AppTheme.LIGHT, appThemeLight);
+            assertEquals(AppTheme.DARK, appThemeDark);
+            assertEquals(AppTheme.TIMED, appThemeTimed);
             assertEquals(AppTheme.BLACK, appThemeBlack);
 
         }
 
         @Test
         public void test_IfMaterialThemesAreValid() {
+            //Arrange and Act test
             AppTheme materialThemeLight = AppTheme.getTheme(AppTheme.LIGHT_INDEX);
-            assertEquals(Theme.LIGHT, materialThemeLight.getMaterialDialogTheme());
-
-            AppTheme materialThemeDark = AppTheme.getTheme(AppTheme.DARK_INDEX);
-            assertEquals(Theme.DARK, materialThemeDark.getMaterialDialogTheme());
-
+            AppTheme materialThemeDark  = AppTheme.getTheme(AppTheme.DARK_INDEX);
             AppTheme materialThemeTimed = AppTheme.getTheme(AppTheme.TIME_INDEX);
+            AppTheme materialThemeBlack = AppTheme.getTheme(AppTheme.BLACK_INDEX);
+
+            //Assert test
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             if (hour <= 6 || hour >= 18) {
                 assertEquals(Theme.DARK, materialThemeTimed.getMaterialDialogTheme());
             }
-            else
+            else {
                 assertEquals(Theme.LIGHT, materialThemeTimed.getMaterialDialogTheme());
-
-            AppTheme materialThemeBlack = AppTheme.getTheme(AppTheme.BLACK_INDEX);
+            }
+            assertEquals(Theme.LIGHT, materialThemeLight.getMaterialDialogTheme());
+            assertEquals(Theme.DARK, materialThemeDark.getMaterialDialogTheme());
             assertEquals(Theme.DARK, materialThemeBlack.getMaterialDialogTheme());
 
         }
 
         @Test
         public void test_IfSimpleThemesAreValid(){
+            //Arrange test and Act Test
             AppTheme simpleThemeLight  = AppTheme.getTheme(AppTheme.LIGHT_INDEX);
-            assertEquals(AppTheme.LIGHT, simpleThemeLight.getSimpleTheme());
-
-            AppTheme simpleThemeDark  = AppTheme.getTheme(AppTheme.DARK_INDEX);
-            assertEquals(AppTheme.DARK, simpleThemeDark.getSimpleTheme());
-
+            AppTheme simpleThemeDark   = AppTheme.getTheme(AppTheme.DARK_INDEX);
             AppTheme simpleThemeTimed  = AppTheme.getTheme(AppTheme.TIME_INDEX);
+            AppTheme simpleThemeBlack  = AppTheme.getTheme(AppTheme.BLACK_INDEX);
+
+            //Assert test
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             if (hour <= 6 || hour >= 18) {
                 assertEquals(AppTheme.DARK, simpleThemeTimed.getSimpleTheme());
             }
             else
                 assertEquals(AppTheme.LIGHT, simpleThemeTimed.getSimpleTheme());
-
-            AppTheme simpleThemeBlack  = AppTheme.getTheme(AppTheme.BLACK_INDEX);
+            assertEquals(AppTheme.LIGHT, simpleThemeLight.getSimpleTheme());
+            assertEquals(AppTheme.DARK, simpleThemeDark.getSimpleTheme());
             assertEquals(AppTheme.BLACK, simpleThemeBlack.getSimpleTheme());
 
         }

@@ -17,21 +17,21 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class PermissionsTest {
-
+    //Arrange test
     private Context context;
-
     @Rule
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, true);
 
     @Before
-    public void setUp() {
+    public void act_Test() {
+        //Act test
         context = InstrumentationRegistry.getTargetContext(); }
 
     @Test
     public void test_IfUserHasPermission_ToWrite() {
+        //Assert test
         assertTrue(String.valueOf(true), ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED);
     }

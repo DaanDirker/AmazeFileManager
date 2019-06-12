@@ -34,6 +34,7 @@ public class FilesNavigationEspressoTest {
 
     @Before
     public void setUp() {
+        //Arrange test
         Context context = InstrumentationRegistry.getTargetContext();
 
         //Clear sharedPreference
@@ -45,9 +46,12 @@ public class FilesNavigationEspressoTest {
 
     @Test
     public void testFilesList_itemClicked_listChanged() {
+        //Act test
         onView(withId(R.id.home)).perform(click());
         onView(allOf(withId(R.id.filesListView), isDisplayed())).perform(click());
         ArrayList<LayoutElementParcelable> newItems = activityRule.getActivity().getCurrentMainFragment().getElementsList();
+
+        //Assert test
         Assert.assertNotEquals(initialItems, newItems);
     }
 }
