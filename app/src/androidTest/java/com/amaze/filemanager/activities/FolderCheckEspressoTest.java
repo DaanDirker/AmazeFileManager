@@ -29,24 +29,31 @@ public class FolderCheckEspressoTest {
 
     @Before
     public void setUp() {
+        //Arrange test
         context = InstrumentationRegistry.getTargetContext();
         mainActivityHelper = activityRule.getActivity().mainActivityHelper;
     }
 
     @Test
     public void testFolder_folderIsNotExistent_doesNotExist() {
+        //Act test
         file = new File(activityRule.getActivity().getCurrentMainFragment()
                 .getCurrentPath() + unknownFolder);
 
         int checkResult = mainActivityHelper.checkFolder(file, context);
+
+        //Assert test
         Assert.assertEquals(MainActivityHelper.DOESNT_EXIST, checkResult);
     }
 
     @Test
     public void testFolder_folderAlreadyExists_canCreateFile() {
+        //Act test
         file = new File(activityRule.getActivity().getCurrentMainFragment().getCurrentPath());
 
         int checkResult = mainActivityHelper.checkFolder(file, context);
+
+        //Assert test
         Assert.assertEquals(MainActivityHelper.CAN_CREATE_FILES,
                 MainActivityHelper.WRITABLE_OR_ON_SDCARD, checkResult);
     }
