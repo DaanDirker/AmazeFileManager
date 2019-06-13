@@ -17,6 +17,11 @@ pipeline {
                 sh './gradlew connectedAndroidTest'
             }
         }
+        stage ("Sonarqube analysis") {
+            steps {
+                sh './gradlew clean sonarqube'
+            }
+        }
         stage('Archive Results') {
             steps {
                 archiveArtifacts '**/*.apk'
