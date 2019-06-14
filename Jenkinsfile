@@ -20,7 +20,7 @@ pipeline {
         }
         stage ("Sonarqube analysis") {
             steps {
-                sh './gradlew clean sonarqube'
+                sh './gradlew sonarqube'
             }
         }
         stage('Archive Results') {

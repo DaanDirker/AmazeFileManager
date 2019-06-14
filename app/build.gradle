@@ -1,4 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "AmazeFileManager"
+        property "sonar.projectKey", "Amaze.File.Manager"
+        property "sonar.host.url", "http://localhost:9000/sonar"
+        property "sonar.login", "admin"
+        property "sonar.password", "admin"
+    }
+}
 
 android {
     compileSdkVersion 28
