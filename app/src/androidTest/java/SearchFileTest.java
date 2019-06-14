@@ -28,7 +28,6 @@ public class SearchFileTest {
         fileOne = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile.txt");
         fileTwo = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile2.txt");
         fileThree = new HybridFileParcelable("/storage/sdcard0/TestDirectory/TestFile3.txt");
-
     }
 
     @Test
