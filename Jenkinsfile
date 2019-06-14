@@ -26,7 +26,7 @@ pipeline {
         stage('Archive Results') {
             steps {
                 archiveArtifacts '**/*.apk'
-                junit '**/TEST-*.xml'
+                junit '**/reports/junit/*.xml'
             }
         }
     }
