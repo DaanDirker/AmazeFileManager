@@ -15,6 +15,7 @@ pipeline {
             steps {
                 sh './gradlew assembleAndroidTest'
                 sh './gradlew connectedAndroidTest'
+                sh './gradlew test'
             }
         }
         stage ("Sonarqube analysis") {
