@@ -26,7 +26,7 @@ pipeline {
         stage('Archive Results') {
             steps {
                 archiveArtifacts '**/*.apk'
-                junit '**/reports/junit/*.xml'
+                junit 'app/build/outputs/androidTest-results/connected/flavors/FDROID/*.xml'
             }
         }
     }
