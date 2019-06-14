@@ -1,4 +1,3 @@
-
 import android.support.test.runner.AndroidJUnit4;
 
 import com.afollestad.materialdialogs.Theme;
