@@ -78,8 +78,8 @@ public abstract class Extractor {
         });
     }
 
-    protected void extractEntry(@NonNull final Context context, TarArchiveInputStream inputStream,
-                                TarArchiveEntry entry, String outputDir) throws IOException {
+    protected void extractEntryTar(@NonNull final Context context, TarArchiveInputStream inputStream,
+                                   TarArchiveEntry entry, String outputDir) throws IOException {
         File outputFile = new File(outputDir, fixEntryName(entry.getName()));
 
         if (!outputFile.getCanonicalPath().startsWith(outputDir)){

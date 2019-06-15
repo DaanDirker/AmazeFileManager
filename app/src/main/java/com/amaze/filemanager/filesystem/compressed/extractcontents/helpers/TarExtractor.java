@@ -25,17 +25,12 @@ package com.amaze.filemanager.filesystem.compressed.extractcontents.helpers;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.amaze.filemanager.filesystem.FileUtil;
 import com.amaze.filemanager.filesystem.compressed.CompressedHelper;
 import com.amaze.filemanager.filesystem.compressed.extractcontents.Extractor;
-import com.amaze.filemanager.utils.ServiceWatcherUtil;
-import com.amaze.filemanager.utils.files.GenericCopyUtil;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,7 +71,7 @@ public class TarExtractor extends Extractor {
                 listener.onUpdate(entry.getName());
                 //TAR is sequential, you need to walk all the way to the file you want
                 while (entry.hashCode() != inputStream.getNextTarEntry().hashCode());
-                extractEntry(context, inputStream, entry, outputPath);
+                extractEntryTar(context, inputStream, entry, outputPath);
             }
         }
         inputStream.close();
