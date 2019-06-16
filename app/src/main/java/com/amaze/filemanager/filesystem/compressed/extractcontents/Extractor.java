@@ -25,6 +25,15 @@ package com.amaze.filemanager.filesystem.compressed.extractcontents;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.amaze.filemanager.filesystem.FileUtil;
+import com.amaze.filemanager.utils.ServiceWatcherUtil;
+import com.amaze.filemanager.utils.files.GenericCopyUtil;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +76,39 @@ public abstract class Extractor {
                 return false;
             }
         });
+    }
+
+    protected void extractEntryTar(@NonNull final Context context, TarArchiveInputStream inputStream,
+                                   TarArchiveEntry entry, String outputDir) throws IOException {
+        File outputFile = new File(outputDir, fixEntryName(entry.getName()));
+
+        if (!outputFile.getCanonicalPath().startsWith(outputDir)){
+            throw new IOException("Incorrect TarArchiveEntry path!");
+        }
+
+        if (entry.isDirectory()) {
+            FileUtil.mkdir(outputFile, context);
+            return;
+        }
+
+        if (!outputFile.getParentFile().exists()) {
+            FileUtil.mkdir(outputFile.getParentFile(), context);
+        }
+
+        BufferedOutputStream outputStream = new BufferedOutputStream(
+                FileUtil.getOutputStream(outputFile, context));
+        try {
+            int len;
+            byte buf[] = new byte[GenericCopyUtil.DEFAULT_BUFFER_SIZE];
+            while ((len = inputStream.read(buf)) != -1) {
+                if (!listener.isCancelled()) {
+                    outputStream.write(buf, 0, len);
+                    ServiceWatcherUtil.position += len;
+                } else break;
+            }
+        } finally {
+            outputStream.close();
+        }
     }
 
     public void extractEverything() throws IOException {
