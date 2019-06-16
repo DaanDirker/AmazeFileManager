@@ -180,7 +180,10 @@ public class ColorPref extends PreferenceFragment implements Preference.OnPrefer
                         @Override
                         public void onNeutral(MaterialDialog dialog) {
                             super.onNeutral(dialog);
-                            if (activity != null) activity.setRestartActivity();
+                            if (activity != null) {
+                                activity.setRestartActivity();
+                            }
+                            else { throw new NullPointerException(); }
                             activity.getColorPreference().saveColorPreferences(sharedPref, userColorPreferences);
                             invalidateEverything();
                         }

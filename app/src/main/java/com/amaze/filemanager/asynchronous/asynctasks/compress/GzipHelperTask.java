@@ -57,11 +57,7 @@ public class GzipHelperTask extends CompressedHelperTask {
 
     @Override
     void addElements(ArrayList<CompressedObjectParcelable> elements) {
-        TarArchiveInputStream tarInputStream = null;
-        try {
-            tarInputStream = new TarArchiveInputStream(
-                    new GzipCompressorInputStream(new FileInputStream(filePath)));
-
+        try(TarArchiveInputStream tarInputStream = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(filePath)))) {
             TarArchiveEntry entry;
             while ((entry = tarInputStream.getNextTarEntry()) != null) {
                 String name = entry.getName();
@@ -83,7 +79,5 @@ public class GzipHelperTask extends CompressedHelperTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }

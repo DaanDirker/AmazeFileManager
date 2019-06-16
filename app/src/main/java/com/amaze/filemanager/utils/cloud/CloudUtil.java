@@ -259,27 +259,24 @@ public class CloudUtil {
         HybridFile hybridFile = new HybridFile(OpenMode.UNKNOWN, path);
         hybridFile.generateMode(context);
         DataUtils dataUtils = DataUtils.getInstance();
-
         switch (hybridFile.getMode()) {
             case SFTP:
                 inputStream = SshClientUtils.execute(new SFtpClientTemplate(hybridFile.getPath(), false) {
                     @Override
                     public InputStream execute(final SFTPClient client) throws IOException {
-                        final RemoteFile rf = client.open(SshClientUtils.extractRemotePathFrom(hybridFile.getPath()));
-                        return rf. new RemoteFileInputStream(){
-                            @Override
-                            public void close() throws IOException {
-                                try
-                                {
-                                    super.close();
+                        try (final RemoteFile rf = client.open(SshClientUtils.extractRemotePathFrom(hybridFile.getPath()))) {
+                            return rf.new RemoteFileInputStream() {
+                                @Override
+                                public void close() throws IOException {
+                                    try {
+                                        super.close();
+                                    } finally {
+                                        rf.close();
+                                        client.close();
+                                    }
                                 }
-                                finally
-                                {
-                                    rf.close();
-                                    client.close();
-                                }
-                            }
-                        };
+                            };
+                        }
                     }
                 });
                 break;

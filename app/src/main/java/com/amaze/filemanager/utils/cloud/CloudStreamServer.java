@@ -700,10 +700,11 @@ public abstract class CloudStreamServer {
                 String tmpdir = System.getProperty("java.io.tmpdir");
                 try {
                     File temp = File.createTempFile("NanoHTTPD", "", new File(tmpdir));
-                    OutputStream fstream = new FileOutputStream(temp);
-                    fstream.write(b, offset, len);
-                    fstream.close();
-                    path = temp.getAbsolutePath();
+                    try(OutputStream fstream = new FileOutputStream(temp)) {
+                        fstream.write(b, offset, len);
+                        fstream.close();
+                        path = temp.getAbsolutePath();
+                    }
                 } catch (Exception e) { // Catch exception if any
                     System.err.println("Error: " + e.getMessage());
                 }

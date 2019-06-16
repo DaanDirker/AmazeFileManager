@@ -118,6 +118,7 @@ public class UtilsHandler extends SQLiteOpenHelper {
         switch(oldVersion){
             case 1:
                 db.execSQL(querySftp);
+                break;
             case 2:
                 String backupTable = TEMP_TABLE_PREFIX + TABLE_HISTORY;
                 db.execSQL(queryHistory.replace(TABLE_HISTORY, backupTable));
@@ -160,6 +161,7 @@ public class UtilsHandler extends SQLiteOpenHelper {
                 db.execSQL("INSERT INTO " + backupTable + " SELECT * FROM " + TABLE_SFTP + " group by path;");
                 db.execSQL("DROP TABLE " + TABLE_SFTP + ";");
                 db.execSQL("ALTER TABLE " + backupTable + " RENAME TO " + TABLE_SFTP + ";");
+                break;
             default:
                 break;
         }

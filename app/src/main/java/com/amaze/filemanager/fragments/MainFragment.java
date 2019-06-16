@@ -808,7 +808,7 @@ public class MainFragment extends android.support.v4.app.Fragment implements Bot
                             FileUtils.scanFile(new File(arg), context);
                         }
                     }
-                    //break;
+                    break;
                 default:
                     updateList();
                     break;

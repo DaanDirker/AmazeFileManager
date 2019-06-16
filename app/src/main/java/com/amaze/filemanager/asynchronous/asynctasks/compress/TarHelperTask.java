@@ -52,9 +52,7 @@ public class TarHelperTask extends CompressedHelperTask {
 
     @Override
     void addElements(ArrayList<CompressedObjectParcelable> elements) {
-        TarArchiveInputStream tarInputStream = null;
-        try {
-            tarInputStream = new TarArchiveInputStream(new FileInputStream(filePath));
+        try( TarArchiveInputStream tarInputStream = new TarArchiveInputStream(new FileInputStream(filePath))){
 
             TarArchiveEntry entry;
             while ((entry = tarInputStream.getNextTarEntry()) != null) {
@@ -76,7 +74,6 @@ public class TarHelperTask extends CompressedHelperTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

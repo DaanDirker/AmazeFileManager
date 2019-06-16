@@ -291,12 +291,10 @@ public class MainActivity extends PermissionsActivity implements SmbConnectionLi
         tabHandler = new TabHandler(this);
         utilsHandler = AppConfig.getInstance().getUtilsHandler();
         cloudHandler = new CloudHandler(this);
-
         mainActivityHelper = new MainActivityHelper(this);
-        initialiseFab();// TODO: 7/12/2017 not init when actionIntent != null
+        initialiseFab();
 
         if (CloudSheetFragment.isCloudProviderAvailable(this)) {
-
             getSupportLoaderManager().initLoader(REQUEST_CODE_CLOUD_LIST_KEYS, null, this);
         }
 
@@ -316,29 +314,16 @@ public class MainActivity extends PermissionsActivity implements SmbConnectionLi
         if (savedInstanceState != null) {
             drawer.setSomethingSelected(savedInstanceState.getBoolean(KEY_DRAWER_SELECTED));
         }
-
         // setting window background color instead of each item, in order to reduce pixel overdraw
         if (getAppTheme().equals(AppTheme.LIGHT)) {
-            /*if(Main.IS_LIST)
-                getWindow().setBackgroundDrawableResource(android.R.color.white);
-            else
-                getWindow().setBackgroundDrawableResource(R.color.grid_background_light);
-            */
             getWindow().setBackgroundDrawableResource(android.R.color.white);
-        } else if (getAppTheme().equals(AppTheme.BLACK)) {
+        }
+        else if (getAppTheme().equals(AppTheme.BLACK)) {
             getWindow().setBackgroundDrawableResource(android.R.color.black);
-        } else {
+        }
+        else {
             getWindow().setBackgroundDrawableResource(R.color.holo_dark_background);
         }
-
-        /*findViewById(R.id.drawer_buttton).setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDrawerLayout.isOpen(mDrawerLinear)) {
-                    mDrawerLayout.close(mDrawerLinear);
-                } else mDrawerLayout.openDrawer(mDrawerLinear);
-            }
-        });*/
 
         drawer.setDrawerIndicatorEnabled();
 
@@ -360,40 +345,33 @@ public class MainActivity extends PermissionsActivity implements SmbConnectionLi
         AppConfig.runInParallel(new AppConfig.CustomAsyncCallbacks<Void, Void>(null) {
             @Override
             public Void doInBackground() {
-
                 dataUtils.setHiddenFiles(utilsHandler.getHiddenFilesConcurrentRadixTree());
                 dataUtils.setHistory(utilsHandler.getHistoryLinkedList());
                 dataUtils.setGridfiles(utilsHandler.getGridViewList());
                 dataUtils.setListfiles(utilsHandler.getListViewList());
                 dataUtils.setBooks(utilsHandler.getBookmarksList());
-                ArrayList<String[]> servers = new ArrayList<String[]>();
+                ArrayList<String[]> servers = new ArrayList<>();
                 servers.addAll(utilsHandler.getSmbList());
                 servers.addAll(utilsHandler.getSftpList());
                 dataUtils.setServers(servers);
-
                 return null;
             }
 
             @Override
             public void onPostExecute(Void result) {
-
                 drawer.refreshDrawer();
-
                 if (savedInstanceState == null) {
                     if (openProcesses) {
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.content_frame, new ProcessViewerFragment(), KEY_INTENT_PROCESS_VIEWER);
-                        //transaction.addToBackStack(null);
                         drawer.setSomethingSelected(true);
                         openProcesses = false;
-                        //title.setText(utils.getString(con, R.string.process_viewer));
                         //Commit the transaction
                         transaction.commit();
                         supportInvalidateOptionsMenu();
-                    }  else if (intent.getAction() != null &&
-                            intent.getAction().equals(TileService.ACTION_QS_TILE_PREFERENCES)) {
+                    }
+                    else if (intent.getAction() != null && intent.getAction().equals(TileService.ACTION_QS_TILE_PREFERENCES)) {
                         // tile preferences, open ftp fragment
-
                         FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
                         transaction2.replace(R.id.content_frame, new FtpServerFragment());
                         appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
@@ -422,7 +400,6 @@ public class MainActivity extends PermissionsActivity implements SmbConnectionLi
                     oppathe1 = savedInstanceState.getString(KEY_OPERATED_ON_PATH);
                     oparrayList = savedInstanceState.getParcelableArrayList(KEY_OPERATIONS_PATH_LIST);
                     operation = savedInstanceState.getInt(KEY_OPERATION);
-                    //mainFragment = (Main) savedInstanceState.getParcelable("main_fragment");
                 }
             }
         });
@@ -930,116 +907,112 @@ public class MainActivity extends PermissionsActivity implements SmbConnectionLi
 
         // Handle action buttons
         MainFragment ma = getCurrentMainFragment();
-
-        switch (item.getItemId()) {
-            case R.id.home:
-                if (ma != null)
-                    ma.home();
-                break;
-            case R.id.history:
-                if (ma != null)
-                    GeneralDialogCreation.showHistoryDialog(dataUtils, getPrefs(), ma, getAppTheme());
-                break;
-            case R.id.sethome:
-                if (ma == null) return super.onOptionsItemSelected(item);
-                final MainFragment main = ma;
-                if (main.openMode != OpenMode.FILE && main.openMode != OpenMode.ROOT) {
-                    Toast.makeText(mainActivity, R.string.not_allowed, Toast.LENGTH_SHORT).show();
+        if (ma != null) {
+            switch (item.getItemId()) {
+                case R.id.home:
+                        ma.home();
                     break;
-                }
-                final MaterialDialog dialog = GeneralDialogCreation.showBasicDialog(mainActivity,
-                       R.string.questionset, R.string.setashome, R.string.yes, R.string.no);
-                dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener((v) -> {
-                    main.home = main.getCurrentPath();
-                    updatePaths(main.no);
-                    dialog.dismiss();
-                });
-                dialog.show();
-                break;
-            case R.id.exit:
-                finish();
-                break;
-            case R.id.sort:
-                Fragment fragment = getFragmentAtFrame();
-                if (fragment instanceof AppsListFragment) {
-                    GeneralDialogCreation.showSortDialog((AppsListFragment) fragment, getAppTheme());
-                }
-                break;
-            case R.id.sortby:
-                if (ma != null)
-                    GeneralDialogCreation.showSortDialog(ma, getAppTheme(), getPrefs());
-                break;
-            case R.id.dsort:
-                if (ma == null) return super.onOptionsItemSelected(item);
-                String[] sort = getResources().getStringArray(R.array.directorysortmode);
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(mainActivity);
-                builder.theme(getAppTheme().getMaterialDialogTheme());
-                builder.title(R.string.directorysort);
-                int current = Integer.parseInt(getPrefs().getString(PreferencesConstants.PREFERENCE_DIRECTORY_SORT_MODE, "0"));
-
-                final MainFragment mainFrag = ma;
-
-                builder.items(sort).itemsCallbackSingleChoice(current, (dialog1, view, which, text) -> {
-                    getPrefs().edit().putString(PreferencesConstants.PREFERENCE_DIRECTORY_SORT_MODE, "" + which).commit();
-                    mainFrag.getSortModes();
-                    mainFrag.updateList();
-                    dialog1.dismiss();
-                    return true;
-                });
-                builder.build().show();
-                break;
-            case R.id.hiddenitems:
-                GeneralDialogCreation.showHiddenDialog(dataUtils, getPrefs(), ma, getAppTheme());
-                break;
-            case R.id.view:
-                final MainFragment mainFragment = ma;
-                int pathLayout = dataUtils.getListOrGridForPath(ma.getCurrentPath(), DataUtils.LIST);
-                if (ma.IS_LIST) {
-                    if (pathLayout == DataUtils.LIST) {
-                        AppConfig.runInBackground(() -> {
-                            utilsHandler.removeFromDatabase(new OperationData(UtilsHandler.Operation.LIST,
-                                    mainFragment.getCurrentPath()));
-                        });
+                case R.id.history:
+                        GeneralDialogCreation.showHistoryDialog(dataUtils, getPrefs(), ma, getAppTheme());
+                    break;
+                case R.id.sethome:
+                    final MainFragment main = ma;
+                    if (main.openMode != OpenMode.FILE && main.openMode != OpenMode.ROOT) {
+                        Toast.makeText(mainActivity, R.string.not_allowed, Toast.LENGTH_SHORT).show();
+                        break;
                     }
-                    utilsHandler.saveToDatabase(new OperationData(UtilsHandler.Operation.GRID,
-                            mainFragment.getCurrentPath()));
-
-                    dataUtils.setPathAsGridOrList(ma.getCurrentPath(), DataUtils.GRID);
-                } else {
-                    if (pathLayout == DataUtils.GRID) {
-                        AppConfig.runInBackground(() -> {
-                            utilsHandler.removeFromDatabase(new OperationData(UtilsHandler.Operation.GRID,
-                                    mainFragment.getCurrentPath()));
-                        });
+                    final MaterialDialog dialog = GeneralDialogCreation.showBasicDialog(mainActivity,
+                            R.string.questionset, R.string.setashome, R.string.yes, R.string.no);
+                    dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener((v) -> {
+                        main.home = main.getCurrentPath();
+                        updatePaths(main.no);
+                        dialog.dismiss();
+                    });
+                    dialog.show();
+                    break;
+                case R.id.exit:
+                    finish();
+                    break;
+                case R.id.sort:
+                    Fragment fragment = getFragmentAtFrame();
+                    if (fragment instanceof AppsListFragment) {
+                        GeneralDialogCreation.showSortDialog((AppsListFragment) fragment, getAppTheme());
                     }
+                    break;
+                case R.id.sortby:
+                        GeneralDialogCreation.showSortDialog(ma, getAppTheme(), getPrefs());
+                    break;
+                case R.id.dsort:
+                    String[] sort = getResources().getStringArray(R.array.directorysortmode);
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(mainActivity);
+                    builder.theme(getAppTheme().getMaterialDialogTheme());
+                    builder.title(R.string.directorysort);
+                    int current = Integer.parseInt(getPrefs().getString(PreferencesConstants.PREFERENCE_DIRECTORY_SORT_MODE, "0"));
 
-                    utilsHandler.saveToDatabase(new OperationData(UtilsHandler.Operation.LIST,
-                            mainFragment.getCurrentPath()));
+                    final MainFragment mainFrag = ma;
 
-                    dataUtils.setPathAsGridOrList(ma.getCurrentPath(), DataUtils.LIST);
-                }
-                ma.switchView();
-                break;
-            case R.id.paste:
-                String path = ma.getCurrentPath();
-                ArrayList<HybridFileParcelable> arrayList = new ArrayList<>(Arrays.asList(pasteHelper.paths));
-                boolean move = pasteHelper.operation == PasteHelper.OPERATION_CUT;
-                new PrepareCopyTask(ma, path, move, mainActivity, isRootExplorer())
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, arrayList);
-                pasteHelper = null;
-                invalidatePasteButton(item);
-                break;
-            case R.id.extract:
-                Fragment fragment1 = getFragmentAtFrame();
-                if (fragment1 instanceof CompressedExplorerFragment) {
-                    mainActivityHelper.extractFile(((CompressedExplorerFragment) fragment1).compressedFile);
-                }
-                break;
-            case R.id.search:
-                getAppbar().getSearchView().revealSearchView();
-                break;
+                    builder.items(sort).itemsCallbackSingleChoice(current, (dialog1, view, which, text) -> {
+                        getPrefs().edit().putString(PreferencesConstants.PREFERENCE_DIRECTORY_SORT_MODE, "" + which).commit();
+                        mainFrag.getSortModes();
+                        mainFrag.updateList();
+                        dialog1.dismiss();
+                        return true;
+                    });
+                    builder.build().show();
+                    break;
+                case R.id.hiddenitems:
+                    GeneralDialogCreation.showHiddenDialog(dataUtils, getPrefs(), ma, getAppTheme());
+                    break;
+                case R.id.view:
+                    final MainFragment mainFragment = ma;
+                    int pathLayout = dataUtils.getListOrGridForPath(ma.getCurrentPath(), DataUtils.LIST);
+                    if (ma.IS_LIST) {
+                        if (pathLayout == DataUtils.LIST) {
+                            AppConfig.runInBackground(() -> {
+                                utilsHandler.removeFromDatabase(new OperationData(UtilsHandler.Operation.LIST,
+                                        mainFragment.getCurrentPath()));
+                            });
+                        }
+                        utilsHandler.saveToDatabase(new OperationData(UtilsHandler.Operation.GRID,
+                                mainFragment.getCurrentPath()));
+
+                        dataUtils.setPathAsGridOrList(ma.getCurrentPath(), DataUtils.GRID);
+                    } else {
+                        if (pathLayout == DataUtils.GRID) {
+                            AppConfig.runInBackground(() -> {
+                                utilsHandler.removeFromDatabase(new OperationData(UtilsHandler.Operation.GRID,
+                                        mainFragment.getCurrentPath()));
+                            });
+                        }
+
+                        utilsHandler.saveToDatabase(new OperationData(UtilsHandler.Operation.LIST,
+                                mainFragment.getCurrentPath()));
+
+                        dataUtils.setPathAsGridOrList(ma.getCurrentPath(), DataUtils.LIST);
+                    }
+                    ma.switchView();
+                    break;
+                case R.id.paste:
+                    String path = ma.getCurrentPath();
+                    ArrayList<HybridFileParcelable> arrayList = new ArrayList<>(Arrays.asList(pasteHelper.paths));
+                    boolean move = pasteHelper.operation == PasteHelper.OPERATION_CUT;
+                    new PrepareCopyTask(ma, path, move, mainActivity, isRootExplorer())
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, arrayList);
+                    pasteHelper = null;
+                    invalidatePasteButton(item);
+                    break;
+                case R.id.extract:
+                    Fragment fragment1 = getFragmentAtFrame();
+                    if (fragment1 instanceof CompressedExplorerFragment) {
+                        mainActivityHelper.extractFile(((CompressedExplorerFragment) fragment1).compressedFile);
+                    }
+                    break;
+                case R.id.search:
+                    getAppbar().getSearchView().revealSearchView();
+                    break;
+            }
         }
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
     }
 
     /*@Override
