@@ -201,23 +201,13 @@ public abstract class CloudStreamServer {
         myTcpPort = port;
         myServerSocket = tryBind(myTcpPort);
         myThread = new Thread(() -> {
-            try {
                 while (true) {
-                    /*
-                    if(session!=null){
-                        session.interrupt();
-                          try {
-                            session.join();
-                          } catch (InterruptedException e) {
-                                e.printStackTrace();
-                          }
-                      }
-                    */
-                    Socket accept = myServerSocket.accept();
-                    new HTTPSession(accept);
+                    try {
+                        accept();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
                 }
-            } catch (IOException ioe) {
-            }
         });
         myThread.setDaemon( true );
         myThread.start();
@@ -227,26 +217,21 @@ public abstract class CloudStreamServer {
     {
         myServerSocket = tryBind(myTcpPort);
         myThread = new Thread(() -> {
-            try {
-                while (true) {
-                    /*
-                      if(session!=null){
-                              session.interrupt();
-                              try {
-                                      session.join();
-                              } catch (InterruptedException e) {
-                                      e.printStackTrace();
-                              }
-                      }
-                    */
-                    Socket accept = myServerSocket.accept();
-                    new HTTPSession(accept);
+            while (true) {
+                try {
+                    accept();
+                } catch (IOException e) {
+                    System.out.println(e);
                 }
-            } catch (IOException ioe) {
             }
         });
         myThread.setDaemon( true );
         myThread.start();
+    }
+
+    private void accept() throws IOException {
+        Socket accept = myServerSocket.accept();
+        new HTTPSession(accept);
     }
 
     /**
@@ -259,8 +244,12 @@ public abstract class CloudStreamServer {
             myServerSocket.close();
             myThread.join();
         }
-        catch ( IOException ioe ) {}
-        catch ( InterruptedException e ) {}
+        catch ( IOException ioe ) {
+            System.out.println(ioe);
+        }
+        catch ( InterruptedException e ) {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -279,47 +268,6 @@ public abstract class CloudStreamServer {
         }
         return socket;
     }
-
-    //
-    //      /**
-    //       * Starts as a standalone file server and waits for Enter.
-    //       */
-    //      public static void main( String[] args )
-    //      {
-    //              System.out.println( "NanoHTTPD 1.24 (C) 2001,2005-2011 Jarno Elonen and (C) 2010 Konstantinos Togias\n" +
-    //                                                      "(Command line options: [-p port] [-d root-dir] [--licence])\n" );
-    //
-    //              // Defaults
-    //              int port = 80;
-    //              File wwwroot = new File(".").getAbsoluteFile();
-    //
-    //              // Show licence if requested
-    //              for ( int i=0; i<args.length; ++i )
-    //              if(args[i].equalsIgnoreCase("-p"))
-    //                      port = Integer.parseInt( args[i+1] );
-    //              else if(args[i].equalsIgnoreCase("-d"))
-    //                      wwwroot = new File( args[i+1] ).getAbsoluteFile();
-    //              else if ( args[i].toLowerCase().endsWith( "licence" ))
-    //              {
-    //                      System.out.println( LICENCE + "\n" );
-    //                      break;
-    //              }
-    //
-    //              try
-    //              {
-    //                      new NanoHTTPD( port, wwwroot );
-    //              }
-    //              catch( IOException ioe )
-    //              {
-    //                      System.err.println( "Couldn't start server:\n" + ioe );
-    //                      System.exit( -1 );
-    //              }
-    //
-    //              System.out.println( "Now serving files in port " + port + " from \"" + wwwroot + "\"" );
-    //              System.out.println( "Hit Enter to stop.\n" );
-    //
-    //              try { System.in.read(); } catch( Throwable t ) {}
-    //      }
 
     /**
      * Handles one session, i.e. parses the HTTP request
